@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'django_celery_results',
 
     'broker',
     'client_front',
@@ -112,9 +113,9 @@ LOGIN_URL = '/auth'
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
-REDIS_URL = 'redis://127.0.0.1:6379'
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
-CELERY_TASK_SERIALIZER = 'json'
+# REDIS_URL = 'redis://127.0.0.1:6379'
+# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
+# CELERY_TASK_SERIALIZER = 'json'
 
 # REDIS_HOST = '127.0.0.1'
 # REDIS_PORT = '6379'
@@ -124,3 +125,9 @@ CELERY_TASK_SERIALIZER = 'json'
 # accept_content = ['application/json']
 # task_serializer = 'json'
 # result_serializer = 'json'
+
+CELERY_TIMEZONE = "Australia/Tasmania"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'default'

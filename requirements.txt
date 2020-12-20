@@ -30,3 +30,4 @@ psycopg2==2.8.6
 whitenoise==5.2.0
 psycopg2-binary==2.8.6
 redis==3.5.3
+django-celery-results==2.0.0
