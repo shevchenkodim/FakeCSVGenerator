@@ -14,7 +14,7 @@ DEBUG = env('DEBUG')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['radiant-plains-01976.herokuapp.com', '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
