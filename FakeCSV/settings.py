@@ -112,11 +112,15 @@ LOGIN_URL = '/auth'
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
-REDIS_HOST = '127.0.0.1'
-REDIS_PORT = '6379'
-CELERY_broker_url = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-CELERY_BROKEN_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
-result_backend = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-accept_content = ['application/json']
-task_serializer = 'json'
-result_serializer = 'json'
+REDIS_URL = 'redis://127.0.0.1:6379'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379'
+CELERY_TASK_SERIALIZER = 'json'
+
+# REDIS_HOST = '127.0.0.1'
+# REDIS_PORT = '6379'
+# CELERY_broker_url = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+# CELERY_BROKEN_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+# result_backend = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+# accept_content = ['application/json']
+# task_serializer = 'json'
+# result_serializer = 'json'
