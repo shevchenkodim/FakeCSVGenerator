@@ -1,0 +1,18 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light pl-5 pr-5">
+    <a class="navbar-brand" href="{% url 'client_front:index' %}"><b>FakeCSV</b></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link active" href="{% url 'client_front:index' %}">Schemas<span class="sr-only">(current)</span></a>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end align-items-center">
+        {% if user.is_authenticated %}
+            <span class="pr-1">Hello,</span><b>{{ user.username }}</b><a class="nav-item nav-link" href="{% url 'client_front:client_logout' %}">Logout</a>
+        {% else %}
+            <a class="nav-item nav-link" href="{% url 'client_front:client_auth' %}">Login</a>
+        {% endif %}
+    </div>
+</nav>

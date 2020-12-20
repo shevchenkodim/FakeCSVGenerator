@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block medium %}
+    <div class="row">
+        <div class="col-12 mb-3 d-flex justify-content-between">
+            <h3><b>{{ title }}</b></h3>
+            <div v-if="data.loading" class="spinner-border ml-2" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <button v-on:click="do_save_all($event)" v-if="data.id" class="btn btn-success">
+                Save data
+            </button>
+            <button v-on:click="do_save_all($event)" v-else class="btn btn-success">
+                Create new schema
+            </button>
+        </div>
+        <div class="col-12">
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input v-model="data.title" type="text" class="form-control" id="schema_name_id" placeholder="Enter name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="column_separator_id">Column separator</label>
+                        <select v-model="data.separator_id" class="form-control" id="column_separator_id">
+                            {% for col_sep in column_separator %}
+                                <option value="{{ col_sep.id }}">{{ col_sep }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="string_character_id">String character</label>
+                        <select v-model="data.character_id" class="form-control" id="string_character_id">
+                            {% for str_char in string_character %}
+                                <option value="{{ str_char.id }}">{{ str_char }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 mb-3 d-flex justify-content-between">
+            <h3><b>Schema column</b></h3>
+        </div>
+        <div class="col-12">
+            <div v-for="col in data.columns" class="form-row">
+                <div class="form-group col-3">
+                    <label for="schema_colunm_name_id">Column name</label>
+                    <input v-model="col.name" type="text" class="form-control" id="schema_colunm_name_id" placeholder="Enter name">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="string_character_id">Type</label>
+                    <select v-model="col.type" class="form-control" id="string_character_id">
+                        {% for type in column_types %}
+                            <option value="{{ type.id }}">{{ type.value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <div v-if="data.integer_type_id == col.type" class="row">
+                        <div class="col-6">
+                            <label for="schema_colunm_from_id">From</label>
+                            <input v-model="col.input_from" type="number" class="form-control" id="schema_colunm_from_id">
+                        </div>
+                        <div class="col-6">
+                            <label for="schema_colunm_to_id">To</label>
+                            <input v-model="col.input_to" type="number" class="form-control" id="schema_colunm_to_id">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-md-3">
+                    <div class="row d-flex align-items-end">
+                        <div class="col-6">
+                            <label for="schema_colunm_order_id">Order</label>
+                            <input v-model="col.order_id" type="number" class="form-control" id="schema_colunm_order_id">
+                        </div>
+                        <div class="col-6 pb-1 d-flex justify-content-end">
+                            <div v-if="data.remove_column_loading && data.remove_column === col.id"
+                                 class="spinner-grow text-primary mr-2" role="status">
+                              <span class="sr-only">Loading...</span>
+                            </div>
+                            <button v-on:click="do_remove_columns($event, col.id)"
+                                    class="btn btn-sm btn-danger ml-1">
+                                <i class="far fa-trash-alt pr-1"></i>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <form class="border border-dark rounded p-2">
+                <div class="form-row">
+                    <div class="form-group col-3">
+                        <label for="schema_colunm_name_id">Column name</label>
+                        <input v-model="data.form_create.name" type="text" class="form-control" id="schema_colunm_name_id" placeholder="Enter name">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="string_character_id">Type</label>
+                        <select v-model="data.form_create.type" class="form-control" id="string_character_id">
+                            {% for type in column_types %}
+                                <option value="{{ type.id }}">{{ type.value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <div v-if="data.integer_type_id == data.form_create.type" class="row">
+                            <div class="col-6">
+                                <label for="schema_colunm_from_id">From</label>
+                                <input v-model="data.form_create.input_from" type="number" class="form-control" id="schema_colunm_from_id">
+                            </div>
+                            <div class="col-6">
+                                <label for="schema_colunm_to_id">To</label>
+                                <input v-model="data.form_create.input_to" type="number" class="form-control" id="schema_colunm_to_id">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="schema_colunm_order_id">Order</label>
+                        <input v-model="data.form_create.order_id" type="number" class="form-control" id="schema_colunm_order_id">
+                    </div>
+                </div>
+                <div class="form-row pl-1">
+                    <button v-on:click="do_add_columns($event)" class="btn btn-info">Add column</button>
+                    <div v-if="data.create_column_loading" class="spinner-border ml-2" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="application/javascript">
+        var integer_type_id = '{{ integer_type_id| safe }}';
+        var schema_data = {{ schema_data| safe }};
+        var columns_list = {{ columns|safe }};
+
+        init_urls = {
+            {% if schema %}
+            do_create_column_url: '{% url 'client_front:schema_new_column' schema.id %}',
+            do_remove_column_url: '{% url 'client_front:schema_remove_column' schema.id %}',
+            do_save_schema_edit_url: '{% url 'client_front:schema_edit' schema.id %}',
+            {% endif %}
+            do_create_schema_url: '{% url 'client_front:schema_new' %}',
+        }
+
+        init_data = {
+            ...schema_data,
+            columns: columns_list,
+            integer_type_id: integer_type_id,
+            form_create: {
+                name: '',
+                type: '',
+                input_from: null,
+                input_to: null,
+                order_id: 0
+            },
+            loading: false,
+            create_column_loading: false,
+            remove_column_loading: false,
+            remove_column: null,
+            __state__: {}
+        }
+
+        init_methods = {
+            do_init() {},
+            do_clear_form_create() {
+                this.data.form_create = {
+                    name: '',
+                    type: '',
+                    input_from: null,
+                    input_to: null,
+                    order_id: 0
+                }
+            },
+            do_add_columns(event) {
+                if(event) {
+                    event.preventDefault();
+                }
+
+                let data = this.data.form_create
+                if(!data.name || !data.type) {
+                    toastr.error('You must specify at least a name and type!')
+                    return
+                }
+                if(!this.data.id) {
+                    this.data.columns.push(this.data.form_create)
+                    this.do_clear_form_create()
+                } else {
+                    this.do_create_column_for_scheme(data)
+                }
+            },
+            do_create_column_for_scheme(data) {
+                this.data.create_column_loading = true
+
+                this.axios_post(_url = this.urls.do_create_column_url, _body = data)
+                    .then(resp => {
+                        if (resp.status == 200) {
+                            if(resp.data.error && resp.data.error) {
+                                toastr.error(resp.data.error)
+                            }
+                            if(resp.data.status === 'ok') {
+                                toastr.success('The column was successfully added!')
+                                this.data.columns.push(resp.data.column)
+                                this.do_clear_form_create()
+                            }
+                        }
+                    }).catch(() => {
+                }).finally(() => {
+                    this.data.create_column_loading = false
+                })
+            },
+            do_remove_columns(event, col_id) {
+                if(event) {
+                    event.preventDefault();
+                }
+
+                if(!this.data.id) {
+                    this.do_filter_column(col_id)
+                } else {
+                    this.do_remove_columns_for_scheme(col_id)
+                }
+            },
+            do_remove_columns_for_scheme(col_id) {
+                this.data.remove_column_loading = true
+                this.data.remove_column = col_id
+
+                this.axios_post(_url = this.urls.do_remove_column_url, _body = {"col_id": col_id})
+                    .then(resp => {
+                        if (resp.status == 200) {
+                            if(resp.data.error && resp.data.error) {
+                                toastr.error(resp.data.error)
+                            }
+                            if(resp.data.status === 'ok') {
+                                toastr.success('The column was successfully deleted!')
+                                this.do_filter_column(col_id)
+                            }
+                        }
+                    }).catch(() => {
+                }).finally(() => {
+                    this.data.remove_column_loading = false
+                    this.data.remove_column = null
+                })
+            },
+            do_filter_column(col_id) {
+                this.data.columns = this.data.columns.filter(col => {
+                    if(col.id !== col_id) {
+                        return true
+                    }
+                })
+            },
+            do_save_all(event) {
+                if(event) {
+                    event.preventDefault();
+                }
+
+                this.data.loading = true
+
+                let _body = {
+                    "title": this.data.title,
+                    "character_id": this.data.character_id,
+                    "separator_id": this.data.separator_id,
+                    "columns": this.data.columns,
+                }
+
+                _url = this.data.id ? this.urls.do_save_schema_edit_url : this.urls.do_create_schema_url
+
+                this.axios_post(_url, _body)
+                    .then(resp => {
+                        if (resp.status === 200) {
+                            if(resp.data.error && resp.data.error) {
+                                toastr.error(resp.data.error)
+                            }
+                            if(resp.data.status === 'ok') {
+                                window.location.replace(resp.data.redirect);
+                            }
+                        }
+                    }).catch(() => {
+                }).finally(() => {
+                    this.data.loading = false
+                })
+            }
+        }
+    </script>
+{% endblock medium %}

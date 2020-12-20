@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block medium %}
+    <div class="row">
+        <div class="col-12 mb-3 d-flex justify-content-between">
+            <h3><b>Data schemas</b></h3>
+            <a href="{% url 'client_front:schema_new' %}" class="btn btn-success">
+                New schema
+            </a>
+        </div>
+        <div class="col-12">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col"><b>#</b></th>
+                        <th scope="col"><b>Title</b></th>
+                        <th scope="col"><b>Modified</b></th>
+                        <th scope="col"><b>Actions</b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for schemas in schemas_list %}
+                        <tr>
+                            <th scope="row">
+                                <b>{{ forloop.counter }}</b>
+                            </th>
+                            <td><a href="{{ schemas.get_absolute_url }}">{{ schemas.title }}</a></td>
+                            <td>{{ schemas.updated_at|date:"Y-m-d" }}</td>
+                            <td>
+                                <a href="{% url 'client_front:schema_edit' schemas.id %}" class="btn btn-sm btn-info mr-1">
+                                    <i class="far fa-edit pr-1"></i>
+                                    Edit scheme
+                                </a>
+                                <button v-on:click="do_remove_scheme($event, url='{% url 'client_front:schema_remove' schemas.id %}')"
+                                        class="btn btn-sm btn-danger ml-1"
+                                >
+                                    <i class="far fa-trash-alt pr-1"></i>
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="application/javascript">
+        init_urls = {}
+
+        init_data = {
+              loading: true,
+            __state__: {}
+        }
+
+        init_methods = {
+            do_init() {},
+            do_remove_scheme(event, url) {
+                if(event) {
+                    event.preventDefault();
+                }
+
+                this.data.loading = true
+
+                this.axios_post(_url=url)
+                    .then(resp => {
+                        if (resp.status === 200) {
+                            if(resp.data.error && resp.data.error) {
+                                toastr.error(resp.data.error)
+                            }
+                            if(resp.data.status === 'ok') {
+                                toastr.success('The scheme was successfully deleted!')
+                                window.location.replace('{% url 'client_front:index' %}');
+                            }
+                        }
+                    }).catch(() => {
+                }).finally(() => {
+                    this.data.loading = false
+                })
+            },
+        }
+    </script>
+
+{% endblock medium %}

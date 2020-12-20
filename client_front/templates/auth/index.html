@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main_content %}
+    <div class="auth-wrapper d-flex justify-content-center align-items-center bg-light">
+        <div class="auth-box bg-light border-top border-secondary">
+            <div id="loginform">
+                <div class="text-center p-t-10 p-b-10">
+                    <h2 class="text-dark">
+                        <b>FakeCSV</b>
+                    </h2>
+                </div>
+                <!-- Form -->
+                <form v-on:submit="do_client_auth($event)" class="form-horizontal m-t-10">
+                    <div class="row p-b-20">
+                        <div class="col-12">
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-danger text-white" id="basic-addon1">
+                                        <i class="ti-user"></i>
+                                    </span>
+                                </div>
+                                <input v-model="state.auth.username"
+                                       v-bind:class="{'is-valid': state.auth.username, 'is-invalid': !state.auth.username}"
+                                       type="text"
+                                       class="form-control form-control-lg"
+                                       placeholder="Username"
+                                       aria-label="Username"
+                                       aria-describedby="basic-addon1">
+                            </div>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-warning text-white" id="basic-addon2">
+                                        <i class="ti-pencil"></i>
+                                    </span>
+                                </div>
+                                <input v-model="state.auth.password"
+                                       v-bind:class="{'is-valid': state.auth.password, 'is-invalid': !state.auth.password}"
+                                       type="password"
+                                       class="form-control form-control-lg"
+                                       placeholder="Password"
+                                       aria-label="Password"
+                                       aria-describedby="basic-addon1">
+                            </div>
+
+                            <div v-if="state.auth.loading"
+                                 class="overlay text-center text-dark">
+                                <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row border-top border-secondary">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <div class="p-t-20 d-flex justify-content-end">
+                                    <button v-on:click="do_client_auth($event)"
+                                            class="btn btn-success"
+                                            type="submit">
+                                        Login
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="application/javascript">
+        init_urls = {
+            do_url_auth: "{% url 'client_front:client_auth_api' %}",
+        }
+
+        init_state = {
+            auth: {
+                username: '',
+                password: '',
+                loading: false
+            }
+        }
+
+        init_methods = {
+            do_init() {},
+            do_client_auth(event) {
+                if(event) {
+                    event.preventDefault();
+                }
+
+                this.state.auth.loading = true
+
+                if(!this.state.auth.username || !this.state.auth.password) {
+                    toastr.error('All fields are required!')
+                    this.state.auth.loading = false
+                    return
+                }
+
+                let body = {
+                    "username": this.state.auth.username,
+                    "password": this.state.auth.password,
+                }
+
+                this.axios_post(_url = this.urls.do_url_auth, _body = body)
+                    .then(resp => {
+                        if (resp.status == 200) {
+                            if(resp.data.error && resp.data.error) {
+                                toastr.error(resp.data.error)
+                            }
+                            if(resp.data.status === 'ok') {
+                                window.location.replace(resp.data.redirect)
+                            }
+                        }
+                    }).catch(() => {
+
+                }).finally(() => {
+                    this.state.auth.loading = false
+                })
+            },
+        }
+    </script>
+{% endblock main_content %}
