@@ -10,6 +10,8 @@ environ.Env.read_env()
 
 SECRET_KEY = env('SECRET_KEY')
 
+REDIS_URL = env('SECRET_KEY')
+
 DEBUG = env('DEBUG')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
