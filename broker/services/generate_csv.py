@@ -5,11 +5,14 @@ from random import randint
 from FakeCSV.settings import MEDIA_ROOT
 from common.dict.dicts import CeleryStatusTypeDict
 from common.models import SchemeColumns, DataSet
+from django.db import transaction
 
 
 def generate_csv_for_schema(obj_id):
     """ Function for create or update schemas """
     try:
+        transaction.commit()
+
         time.sleep(10)
         print(obj_id)
 

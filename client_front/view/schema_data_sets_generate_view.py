@@ -10,7 +10,6 @@ from broker.decorators import owner_access_to_schema
 from broker.tasks import generate_csv_for_schema_task
 from common.dict.dicts import CeleryStatusTypeDict
 from common.models import Schemas, DataSet
-from django.db import transaction
 
 
 @owner_access_to_schema
@@ -32,9 +31,9 @@ def do_generate_dataset_file_view(request, schema_pk, **kwargs):
 
                 print(obj)
                 print(obj.id)
-                transaction.commit()
                 generate_csv_for_schema_task.delay(obj.id)
             except Exception as e:
+                print(e)
                 raise IntegrityError
     except (KeyError, IntegrityError) as e:
         return JsonResponse({"status": "no", "error": "Invalid data"}, status=HTTP_200_OK)
