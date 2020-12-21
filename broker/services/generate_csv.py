@@ -12,6 +12,7 @@ def generate_csv_for_schema(obj_id):
     try:
         time.sleep(10)
         print(obj_id)
+
         data_set = DataSet.objects.get(id=obj_id)
         print(data_set)
         schema = data_set.schemas
