@@ -28,7 +28,7 @@ def do_generate_dataset_file_view(request, schema_pk, **kwargs):
                 obj.save()
             except Exception as e:
                 raise IntegrityError
-        generate_csv_for_schema_task.delay(obj.id)
+        transaction.on_commit(lambda: generate_csv_for_schema_task.delay(obj.id))
     except (KeyError, IntegrityError) as e:
         return JsonResponse({"status": "no", "error": "Invalid data"}, status=HTTP_200_OK)
     return JsonResponse({"status": "ok"}, status=HTTP_200_OK)
