@@ -15,10 +15,3 @@ app.conf.update(
 )
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 app.conf.update(BROKER_URL=REDIS_URL, CELERY_RESULT_BACKEND=REDIS_URL)
-
-
-@app.task
-def generate_csv_for_schema_task(obj_id):
-    from broker.services.generate_csv import generate_csv_for_schema
-    generate_csv_for_schema(obj_id)
-    return True

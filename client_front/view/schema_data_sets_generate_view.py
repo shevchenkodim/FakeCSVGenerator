@@ -7,8 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.status import HTTP_200_OK
 
-# from broker.tasks import generate_csv_for_schema_task
-from FakeCSV.celery import generate_csv_for_schema_task
+from broker.tasks import generate_csv_for_schema_task
 from common.dict.dicts import CeleryStatusTypeDict
 from common.models import Schemas, DataSet
 
