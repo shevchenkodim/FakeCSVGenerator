@@ -10,8 +10,9 @@ from common.models import SchemeColumns, DataSet
 def generate_csv_for_schema(obj_id):
     """ Function for create or update schemas """
     try:
+        time.sleep(3)
         print(obj_id)
-        data_set = DataSet.objects.filter(id=obj_id).first()
+        data_set = DataSet.objects.get(id=obj_id)
         print(data_set)
         schema = data_set.schemas
         file_path = f"{MEDIA_ROOT}/data_set/file_{data_set.id}.csv"
