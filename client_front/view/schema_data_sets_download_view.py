@@ -1,15 +1,15 @@
-from django.core.exceptions import PermissionDenied
+from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
-from django.shortcuts import get_object_or_404
-from common.models import DataSet, Schemas
+from broker.decorators import owner_access_to_schema
+from common.models import DataSet
 
 
-def do_download_dataset_file_view(request, schema_pk, data_pk):
+@owner_access_to_schema
+@login_required
+def do_download_dataset_file_view(request, schema_pk, data_pk, **kwargs):
     """ Function for download data sets """
     try:
-        schema = get_object_or_404(Schemas, pk=schema_pk)
-        if schema.owner != request.user:
-            raise PermissionDenied
+        schema = kwargs["schema"]
         data_file = DataSet.objects.get(schemas=schema, id=data_pk)
         response = HttpResponse(content=data_file.file, content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename={0}'.format(data_file.file.name)
