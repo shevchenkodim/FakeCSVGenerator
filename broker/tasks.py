@@ -6,5 +6,5 @@ from celery import shared_task
 
 @shared_task
 def generate_csv_for_schema_task(obj_id):
-    generate_csv_for_schema(obj_id)
-    return True
+    res = generate_csv_for_schema(obj_id)
+    return res
