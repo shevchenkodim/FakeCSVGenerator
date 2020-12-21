@@ -13,3 +13,6 @@ app.conf.update(
      timezone='Europe/Kiev',
 )
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+
+app.conf.update(BROKER_URL=settings.env('REDIS_URL'),
+                CELERY_RESULT_BACKEND=settings.env('REDIS_URL'))

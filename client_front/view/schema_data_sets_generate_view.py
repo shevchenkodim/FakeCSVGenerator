@@ -30,8 +30,7 @@ def do_generate_dataset_file_view(request, schema_pk):
                     rows=rows,
                     status=CeleryStatusTypeDict.objects.get_or_create(code='processing', value='Processing')[0]
                 )
-                generate_csv_for_schema(obj.id)
-                # generate_csv_for_schema_task.delay(obj.id)
+                generate_csv_for_schema_task.delay(obj.id)
             except Exception as e:
                 raise IntegrityError
     except (KeyError, IntegrityError) as e:
