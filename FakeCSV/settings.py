@@ -3,6 +3,8 @@ from pathlib import Path
 import dj_database_url
 import environ
 
+from FakeCSV.celery import app
+
 env = environ.Env(
     DEBUG=(bool, False)
 )
@@ -104,3 +106,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = '/auth'
+
+app.conf.update(BROKER_URL=env('REDIS_URL'),
+                CELERY_RESULT_BACKEND=env('REDIS_URL'))
