@@ -3,8 +3,6 @@ from pathlib import Path
 import dj_database_url
 import environ
 
-from FakeCSV.celery import app
-
 env = environ.Env(
     DEBUG=(bool, False)
 )
