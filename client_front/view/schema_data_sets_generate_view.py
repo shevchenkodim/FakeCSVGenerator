@@ -23,11 +23,15 @@ def do_generate_dataset_file_view(request, schema_pk, **kwargs):
                 data = json.loads(request.body.decode())
                 rows = data["rows"]
 
-                obj = DataSet.objects.create(
-                    schemas=schema,
-                    rows=rows,
-                    status=CeleryStatusTypeDict.objects.get_or_create(code='processing', value='Processing')[0]
-                )
+                obj = DataSet()
+                obj.schemas = schema
+                obj.rows = rows
+                obj.status = CeleryStatusTypeDict.objects.get_or_create(code='processing', value='Processing')[0]
+                obj.save()
+
+                print(obj)
+                print(obj.id)
+
                 generate_csv_for_schema_task.delay(obj.id)
             except Exception as e:
                 raise IntegrityError
