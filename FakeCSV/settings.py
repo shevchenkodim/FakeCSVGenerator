@@ -10,7 +10,7 @@ environ.Env.read_env()
 
 SECRET_KEY = env('SECRET_KEY')
 
-REDIS_URL = env('SECRET_KEY')
+REDIS_URL = env('REDIS_URL')
 
 DEBUG = env('DEBUG')
 
