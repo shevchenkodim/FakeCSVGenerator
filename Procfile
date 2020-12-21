@@ -1,2 +1,2 @@
 web: gunicorn FakeCSV.wsgi --log-file -
-worker: celery worker --app FakeCSV.celery.app --loglevel info
+worker: celery --app FakeCSV.celery.app worker --loglevel info
