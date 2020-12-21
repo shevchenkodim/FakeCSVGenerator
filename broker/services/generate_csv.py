@@ -11,7 +11,6 @@ def generate_csv_for_schema(obj_id):
     """ Function for create or update schemas """
     try:
         print(obj_id)
-        time.sleep(10)
         data_set = DataSet.objects.get(id=obj_id)
         print(data_set)
         schema = data_set.schemas
