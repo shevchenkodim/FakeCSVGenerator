@@ -6,21 +6,20 @@ from django.db import IntegrityError, transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.status import HTTP_200_OK
-
+from broker.decorators import owner_access_to_schema
 from broker.tasks import generate_csv_for_schema_task
 from common.dict.dicts import CeleryStatusTypeDict
 from common.models import Schemas, DataSet
 
 
+@owner_access_to_schema
 @login_required
-def do_generate_dataset_file_view(request, schema_pk):
+def do_generate_dataset_file_view(request, schema_pk, **kwargs):
     """ Function for generate new sets for schema """
     try:
         with transaction.atomic():
             try:
-                schema = get_object_or_404(Schemas, pk=schema_pk)
-                if schema.owner != request.user:
-                    raise PermissionDenied
+                schema = kwargs["schema"]
                 data = json.loads(request.body.decode())
                 rows = data["rows"]
 
