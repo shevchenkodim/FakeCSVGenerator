@@ -28,6 +28,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'django_celery_results',
+    'storages',
 
     'broker',
     'client_front',

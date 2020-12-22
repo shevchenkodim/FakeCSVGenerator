@@ -15,25 +15,22 @@ from common.models import SchemeColumns, DataSet
 def generate_csv_for_schema(obj_id):
     """ Function for create or update schemas """
     try:
-        print(obj_id)
         data_set = DataSet.objects.get(id=obj_id)
-        print(data_set)
         schema = data_set.schemas
         file_path_ = f"{MEDIA_ROOT}/file_{data_set.id}.csv"
         with open(file_path_, 'w+', newline="") as csv_file:
             file_writer = csv.writer(csv_file, delimiter=schema.col_separator.value,
                                      quotechar=schema.col_string_char.value, quoting=csv.QUOTE_MINIMAL)
             columns = SchemeColumns.objects.filter(schemas=schema)
-            print(columns)
             file_writer.writerow(columns.values_list('name', flat=True))
             for row in range(data_set.rows):
                 file_writer.writerow([generate_random_value(col) for col in columns])
-            data_set.file = ContentFile(csv_file.read())
+        with open(file_path_, "rb") as f:
+            data_set.file.save(f"file_{data_set.id}.csv", ContentFile(f.read()))
         data_set.status = CeleryStatusTypeDict.objects.get(code='ready')
         data_set.save()
         os.remove(file_path_)
     except (DataSet.DoesNotExist, CeleryStatusTypeDict.DoesNotExist, Exception) as e:
-        print(e)
         return False
     return True
 
