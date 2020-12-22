@@ -1,4 +1,5 @@
 import csv
+import os
 import random
 import time
 from random import randint
@@ -25,10 +26,10 @@ def generate_csv_for_schema(obj_id):
             for row in range(data_set.rows):
                 print(row)
                 file_writer.writerow([generate_random_value(col) for col in columns])
-            data_set.file = file_path
+            data_set.file.save(f"file_{data_set.id}.csv", csv_file)
         data_set.status = CeleryStatusTypeDict.objects.get(code='ready')
         data_set.save()
-        print(data_set.status)
+        os.remove(file_path)
     except (DataSet.DoesNotExist, CeleryStatusTypeDict.DoesNotExist) as e:
         print(e)
         return False
