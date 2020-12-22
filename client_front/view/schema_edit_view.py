@@ -1,6 +1,5 @@
 import json
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -12,7 +11,7 @@ from rest_framework.status import HTTP_200_OK
 from broker.decorators import owner_access_to_schema
 from broker.services.schemas import create_or_update_schema
 from common.dict.dicts import SeparatorDict, StringCharacterDict, SchemeColumnTypeDict
-from common.models import Schemas, SchemeColumns
+from common.models import SchemeColumns
 
 decorators = [login_required, owner_access_to_schema]
 
@@ -29,10 +28,7 @@ class SchemaEditView(TemplateView):
         context["title"] = f"Edit schema {schema.title}"
         context["schema_data"] = schema.get_json()
         context["columns"] = [col.get_json() for col in SchemeColumns.objects.filter(schemas=schema)]
-        context["column_separator"] = SeparatorDict.objects.all()
-        context["string_character"] = StringCharacterDict.objects.all()
-        context["column_types"] = SchemeColumnTypeDict.objects.all()
-        context["integer_type_id"] = SchemeColumnTypeDict.objects.get_or_create(code='integer', value='Integer')[0].id
+        context = add_dicts_to_context(**context)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -80,3 +76,12 @@ def remove_column_in_scheme(request, schema_pk, **kwargs):
     except (KeyError, IntegrityError) as e:
         return JsonResponse({"status": "no", "error": "Error! Please try again!"}, status=HTTP_200_OK)
     return JsonResponse({"status": "ok"}, status=HTTP_200_OK)
+
+
+def add_dicts_to_context(**context):
+    """ Function for add dicts to context """
+    context["column_separator"] = SeparatorDict.objects.all()
+    context["string_character"] = StringCharacterDict.objects.all()
+    context["column_types"] = SchemeColumnTypeDict.objects.all()
+    context["integer_type_id"] = SchemeColumnTypeDict.objects.get_or_create(code='integer', value='Integer')[0].id
+    return context

@@ -20,7 +20,13 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label>Name</label>
-                        <input v-model="data.title" type="text" class="form-control" id="schema_name_id" placeholder="Enter name">
+                        <input v-model="data.title"
+                               v-bind:class="{'is-invalid': !data.title}"
+                               type="text"
+                               class="form-control"
+                               id="schema_name_id"
+                               placeholder="Enter name"
+                        >
                     </div>
                 </div>
             </div>
@@ -28,7 +34,11 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label for="column_separator_id">Column separator</label>
-                        <select v-model="data.separator_id" class="form-control" id="column_separator_id">
+                        <select v-model="data.separator_id"
+                                v-bind:class="{'is-invalid': !data.separator_id}"
+                                class="form-control"
+                                id="column_separator_id"
+                        >
                             {% for col_sep in column_separator %}
                                 <option value="{{ col_sep.id }}">{{ col_sep }}</option>
                             {% endfor %}
@@ -40,7 +50,11 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label for="string_character_id">String character</label>
-                        <select v-model="data.character_id" class="form-control" id="string_character_id">
+                        <select v-model="data.character_id"
+                                v-bind:class="{'is-invalid': !data.character_id}"
+                                class="form-control"
+                                id="string_character_id"
+                        >
                             {% for str_char in string_character %}
                                 <option value="{{ str_char.id }}">{{ str_char }}</option>
                             {% endfor %}
@@ -56,11 +70,21 @@
             <div v-for="col in data.columns" class="form-row">
                 <div class="form-group col-3">
                     <label for="schema_colunm_name_id">Column name</label>
-                    <input v-model="col.name" type="text" class="form-control" id="schema_colunm_name_id" placeholder="Enter name">
+                    <input v-model="col.name"
+                           v-bind:class="{'is-invalid': !col.name}"
+                           type="text"
+                           class="form-control"
+                           id="schema_colunm_name_id"
+                           placeholder="Enter name"
+                    >
                 </div>
                 <div class="form-group col-md-3">
                     <label for="string_character_id">Type</label>
-                    <select v-model="col.type" class="form-control" id="string_character_id">
+                    <select v-model="col.type"
+                            class="form-control"
+                            id="string_character_id"
+                            v-bind:class="{'is-invalid': !col.type}"
+                    >
                         {% for type in column_types %}
                             <option value="{{ type.id }}">{{ type.value }}</option>
                         {% endfor %}
@@ -70,11 +94,21 @@
                     <div v-if="data.integer_type_id == col.type" class="row">
                         <div class="col-6">
                             <label for="schema_colunm_from_id">From</label>
-                            <input v-model="col.input_from" type="number" class="form-control" id="schema_colunm_from_id">
+                            <input v-model="col.input_from"
+                                   v-bind:class="{'is-invalid': !col.input_from}"
+                                   type="number"
+                                   class="form-control"
+                                   id="schema_colunm_from_id"
+                            >
                         </div>
                         <div class="col-6">
                             <label for="schema_colunm_to_id">To</label>
-                            <input v-model="col.input_to" type="number" class="form-control" id="schema_colunm_to_id">
+                            <input v-model="col.input_to"
+                                   v-bind:class="{'is-invalid': !col.input_to}"
+                                   type="number"
+                                   class="form-control"
+                                   id="schema_colunm_to_id"
+                            >
                         </div>
                     </div>
                 </div>
@@ -82,7 +116,12 @@
                     <div class="row d-flex align-items-end">
                         <div class="col-6">
                             <label for="schema_colunm_order_id">Order</label>
-                            <input v-model="col.order_id" type="number" class="form-control" id="schema_colunm_order_id">
+                            <input v-model="col.order_id"
+                                   v-bind:class="{'is-invalid': !Number(col.order_id) && col.order_id != '0'}"
+                                   type="number"
+                                   class="form-control"
+                                   id="schema_colunm_order_id"
+                            >
                         </div>
                         <div class="col-6 pb-1 d-flex justify-content-end">
                             <div v-if="data.remove_column_loading && data.remove_column === col.id"
@@ -104,11 +143,21 @@
                 <div class="form-row">
                     <div class="form-group col-3">
                         <label for="schema_colunm_name_id">Column name</label>
-                        <input v-model="data.form_create.name" type="text" class="form-control" id="schema_colunm_name_id" placeholder="Enter name">
+                        <input v-model="data.form_create.name"
+                               v-bind:class="{'is-invalid': !data.form_create.name}"
+                               type="text"
+                               class="form-control"
+                               id="schema_colunm_name_id"
+                               placeholder="Enter name"
+                        >
                     </div>
                     <div class="form-group col-md-3">
                         <label for="string_character_id">Type</label>
-                        <select v-model="data.form_create.type" class="form-control" id="string_character_id">
+                        <select v-model="data.form_create.type"
+                                class="form-control"
+                                id="string_character_id"
+                                v-bind:class="{'is-invalid': !data.form_create.type}"
+                        >
                             {% for type in column_types %}
                                 <option value="{{ type.id }}">{{ type.value }}</option>
                             {% endfor %}
@@ -117,18 +166,33 @@
                     <div class="form-group col-md-3">
                         <div v-if="data.integer_type_id == data.form_create.type" class="row">
                             <div class="col-6">
-                                <label for="schema_colunm_from_id">From</label>
-                                <input v-model="data.form_create.input_from" type="number" class="form-control" id="schema_colunm_from_id">
+                                <label for="schema_column_from_id">From</label>
+                                <input v-model="data.form_create.input_from"
+                                       v-bind:class="{'is-invalid': !data.form_create.input_from}"
+                                       type="number"
+                                       class="form-control"
+                                       id="schema_column_from_id"
+                                >
                             </div>
                             <div class="col-6">
                                 <label for="schema_colunm_to_id">To</label>
-                                <input v-model="data.form_create.input_to" type="number" class="form-control" id="schema_colunm_to_id">
+                                <input v-model="data.form_create.input_to"
+                                           v-bind:class="{'is-invalid': !data.form_create.input_to}"
+                                       type="number"
+                                       class="form-control"
+                                       id="schema_colunm_to_id"
+                                >
                             </div>
                         </div>
                     </div>
                     <div class="form-group col-md-3">
                         <label for="schema_colunm_order_id">Order</label>
-                        <input v-model="data.form_create.order_id" type="number" class="form-control" id="schema_colunm_order_id">
+                        <input v-model="data.form_create.order_id"
+                               type="number"
+                               class="form-control"
+                               id="schema_colunm_order_id"
+                               v-bind:class="{'is-invalid': !Number(data.form_create.order_id) && data.form_create.order_id != '0'}"
+                        >
                     </div>
                 </div>
                 <div class="form-row pl-1">
@@ -263,6 +327,11 @@
             do_save_all(event) {
                 if(event) {
                     event.preventDefault();
+                }
+
+                if(!this.data.title || !this.data.character_id || !this.data.separator_id) {
+                    toastr.error("The basic data for the scheme must be completed!")
+                    return
                 }
 
                 this.data.loading = true

@@ -7,9 +7,8 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from rest_framework.status import HTTP_200_OK
-
 from broker.services.schemas import create_or_update_schema
-from common.dict.dicts import SeparatorDict, StringCharacterDict, SchemeColumnTypeDict
+from client_front.view.schema_edit_view import add_dicts_to_context
 
 
 @method_decorator(login_required, name='dispatch')
@@ -23,10 +22,7 @@ class SchemaCreateView(TemplateView):
         context["title"] = "New schema"
         context["schema_data"] = {"id": "", "title": "", "separator_id": "", "character_id": ""}
         context["columns"] = []
-        context["column_separator"] = SeparatorDict.objects.all()
-        context["string_character"] = StringCharacterDict.objects.all()
-        context["column_types"] = SchemeColumnTypeDict.objects.all()
-        context["integer_type_id"] = SchemeColumnTypeDict.objects.get_or_create(code='integer', value='Integer')[0].id
+        context = add_dicts_to_context(**context)
         return context
 
     def post(self, request, *args, **kwargs):

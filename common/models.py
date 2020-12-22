@@ -50,13 +50,16 @@ class SchemeColumns(models.Model):
         ordering = ['order_id']
         db_table = 'scheme_columns'
 
+    def __str__(self):
+        return f"{self.name} - {self.type.value}"
+
     def get_json(self):
         return {
             "id": self.id,
             "name": self.name,
             "type": self.type.id,
-            "input_from": self.input_from if self.input_from else '',
-            "input_to": self.input_to if self.input_to else '',
+            "input_from": self.input_from if self.input_from or self.input_from == 0 else '',
+            "input_to": self.input_to if self.input_to or self.input_to == 0 else '',
             "order_id": self.order_id
         }
 
@@ -72,3 +75,6 @@ class DataSet(models.Model):
     class Meta:
         ordering = ['-created_at']
         db_table = 'data_set'
+
+    def __str__(self):
+        return f"{self.schemas.title} - {self.rows} - {self.status}"
