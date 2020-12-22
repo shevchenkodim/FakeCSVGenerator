@@ -109,4 +109,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+ROOT_TEMP = os.path.join(BASE_DIR, 'temp')
+
 LOGIN_URL = '/auth'
