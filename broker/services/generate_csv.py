@@ -15,9 +15,10 @@ def generate_csv_for_schema(obj_id):
         data_set = DataSet.objects.get(id=obj_id)
         print(data_set)
         schema = data_set.schemas
-        file_path = f"{MEDIA_ROOT}/data_set/file_{data_set.id}.csv"
+        file_path_ = f"{MEDIA_ROOT}/data_set/file_{data_set.id}.csv"
+        file_path = f"data_set/file_{data_set.id}.csv"
         print(file_path)
-        with open(file_path, 'w+', newline="") as csv_file:
+        with open(file_path_, 'w+', newline="") as csv_file:
             file_writer = csv.writer(csv_file, delimiter=schema.col_separator.value,
                                      quotechar=schema.col_string_char.value, quoting=csv.QUOTE_MINIMAL)
             columns = SchemeColumns.objects.filter(schemas=schema)
