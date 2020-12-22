@@ -24,9 +24,8 @@ def generate_csv_for_schema(obj_id):
             print(columns)
             file_writer.writerow(columns.values_list('name', flat=True))
             for row in range(data_set.rows):
-                print(row)
                 file_writer.writerow([generate_random_value(col) for col in columns])
-            data_set.file.name = file_path
+            data_set.file = file_path
         data_set.status = CeleryStatusTypeDict.objects.get(code='ready')
         data_set.save()
     except (DataSet.DoesNotExist, CeleryStatusTypeDict.DoesNotExist) as e:
