@@ -3,6 +3,9 @@ import os
 import random
 import time
 from random import randint
+
+from django.core.files import File
+
 from FakeCSV.settings import MEDIA_ROOT
 from common.dict.dicts import CeleryStatusTypeDict
 from common.models import SchemeColumns, DataSet
@@ -26,7 +29,7 @@ def generate_csv_for_schema(obj_id):
             file_writer.writerow(columns.values_list('name', flat=True))
             for row in range(data_set.rows):
                 file_writer.writerow([generate_random_value(col) for col in columns])
-            data_set.file = file_path
+            data_set.file.save(csv_file.name, File(csv_file))
         data_set.status = CeleryStatusTypeDict.objects.get(code='ready')
         data_set.save()
     except (DataSet.DoesNotExist, CeleryStatusTypeDict.DoesNotExist) as e:
