@@ -7,7 +7,7 @@ from random import randint
 from django.core.files import File
 from django.core.files.base import ContentFile
 
-from FakeCSV.settings import MEDIA_ROOT, ROOT_TEMP
+from FakeCSV.settings import MEDIA_ROOT
 from common.dict.dicts import CeleryStatusTypeDict
 from common.models import SchemeColumns, DataSet
 
@@ -19,7 +19,7 @@ def generate_csv_for_schema(obj_id):
         data_set = DataSet.objects.get(id=obj_id)
         print(data_set)
         schema = data_set.schemas
-        file_path_ = f"{ROOT_TEMP}/file_{data_set.id}.csv"
+        file_path_ = f"{MEDIA_ROOT}/file_{data_set.id}.csv"
         with open(file_path_, 'w+', newline="") as csv_file:
             file_writer = csv.writer(csv_file, delimiter=schema.col_separator.value,
                                      quotechar=schema.col_string_char.value, quoting=csv.QUOTE_MINIMAL)
@@ -28,7 +28,7 @@ def generate_csv_for_schema(obj_id):
             file_writer.writerow(columns.values_list('name', flat=True))
             for row in range(data_set.rows):
                 file_writer.writerow([generate_random_value(col) for col in columns])
-            data_set.file.save(f"file_{data_set.id}.csv", File(csv_file))
+            data_set.file = ContentFile(csv_file.read())
         data_set.status = CeleryStatusTypeDict.objects.get(code='ready')
         data_set.save()
         os.remove(file_path_)

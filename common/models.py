@@ -1,9 +1,8 @@
-
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 
+from broker.services.storages import PrivateMediaStorage
 from common.dict.dicts import SeparatorDict, StringCharacterDict, SchemeColumnTypeDict, CeleryStatusTypeDict
 
 
@@ -68,7 +67,7 @@ class DataSet(models.Model):
     created_at = models.DateTimeField(verbose_name='Created date', auto_now_add=True)
     rows = models.IntegerField(verbose_name='Rows', default=0)
     status = models.ForeignKey(CeleryStatusTypeDict, on_delete=models.PROTECT, verbose_name='Status')
-    file = models.FileField(upload_to='data_set/', blank=True, null=True)
+    file = models.FileField(storage=PrivateMediaStorage(), blank=True, null=True)
 
     class Meta:
         ordering = ['-created_at']
