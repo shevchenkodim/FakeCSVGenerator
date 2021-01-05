@@ -7,7 +7,7 @@ from random import randint
 from django.core.files import File
 from django.core.files.base import ContentFile
 
-from FakeCSV.settings import MEDIA_ROOT
+from fake_csv.settings import MEDIA_ROOT
 from common.dict.dicts import CeleryStatusTypeDict
 from common.models import SchemeColumns, DataSet
 

@@ -46,7 +46,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'FakeCSV.urls'
+ROOT_URLCONF = 'fake_csv.urls'
 
 TEMPLATES = [
     {
@@ -65,7 +65,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'FakeCSV.wsgi.application'
+WSGI_APPLICATION = 'fake_csv.wsgi.application'
 
 DATABASES = {
     'default': {

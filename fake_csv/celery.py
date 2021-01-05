@@ -3,11 +3,11 @@ import os
 from celery import Celery
 from django.conf import settings
 
-from FakeCSV.settings import REDIS_URL
+from fake_csv.settings import REDIS_URL
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FakeCSV.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fake_csv.settings')
 
-app = Celery('FakeCSV')
+app = Celery('fake_csv')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.update(
     enable_utc=True,
